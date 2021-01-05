@@ -1,8 +1,10 @@
+import json
 import sys
 
 from PyQt5 import QtWidgets
 
 from guimodule import Ui_MainWindow
+from telegrambot import notify_ending
 
 
 class MainWindow(QtWidgets.QMainWindow):
