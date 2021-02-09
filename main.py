@@ -4,7 +4,7 @@ import sys
 from PyQt5 import QtWidgets
 
 from guimodule import Ui_MainWindow
-from telegrambot import notify_ending
+from telegrambot import notify_bot
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -15,6 +15,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
+
     app = QtWidgets.QApplication(sys.argv)
     w = MainWindow()
     w.show()

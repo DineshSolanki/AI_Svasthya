@@ -5,3 +5,5 @@ scipy~=1.6.0
 dlib~=19.21.1
 PyQt5~=5.15.2
 plyer~=2.0.0
+google>=3.0.0
+EasySettings>=4.0.0
