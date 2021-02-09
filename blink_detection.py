@@ -31,6 +31,8 @@ EYE_AR_CONSEC_FRAMES = 2
 COUNTER = 0
 TOTAL = 0
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
+
 
 # construct the argument parse and parse the arguments
 # ap = argparse.ArgumentParser()
@@ -58,7 +60,6 @@ def start_blink_detection():
     vs = VideoStream(src=0).start()
     # vs = VideoStream(usePiCamera=True).start()
     fileStream = False
-    time.sleep(1.0)
     # loop over frames from the video stream
     while True:
         # if this is a file video stream, then we need to check if
@@ -119,19 +120,19 @@ def start_blink_detection():
 
                 # draw the total number of blinks on the frame along with
                 # the computed eye aspect ratio for the frame
-                cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-                cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
 
                 # show the frame
-                cv2.imshow("AI_Svasthya", frame)
-
-            key = cv2.waitKey(1)
-            if key == 27:
-                break
-            # if cv2.waitKey(1) & 0xFF == ord('q'):
-            #     break
+        cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.imshow("AI_Svasthya", frame)
+        key = cv2.waitKey(1)
+        if key == 27:
+            break
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
     # do a bit of cleanup
     cv2.destroyAllWindows()
     vs.stop()

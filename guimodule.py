@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QLabel, QStatusBar, QMenuBar, QSizePolicy, QCheckBox
     QGridLayout, QWidget, QVBoxLayout, QLineEdit, QPushButton, QApplication
 
 import Util
+from blink_detection import start_blink_detection
 from telegrambot import notify_bot
 
 
@@ -159,8 +160,7 @@ class Ui_MainWindow(object):
         self.chkConnectSmartphone.setChecked(Util.get_smart_notification())
 
         # events
-        self.btnStart.clicked.connect(lambda: notify_bot("You have only blinked 5 times in a minutes \nthan an "
-                                                         "average of 15-20 times per minute"))  # Set Start button
+        self.btnStart.clicked.connect(lambda: start_blink_detection())  # Set Start button
         self.chkScreenRest.stateChanged.connect(lambda: Util.set_screen_rest_monitoring(self.chkScreenRest.isChecked()))
         self.chkEyeBlink.stateChanged.connect(lambda: Util.set_blink_monitoring(self.chkEyeBlink.isChecked()))
         self.chkConnectSmartphone.stateChanged.connect(lambda: Util.set_smart_notification())
