@@ -120,13 +120,13 @@ def start_blink_detection():
 
                 # draw the total number of blinks on the frame along with
                 # the computed eye aspect ratio for the frame
+                cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-
-                # show the frame
+        # show the frame
         cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
         cv2.imshow("AI_Svasthya", frame)
         key = cv2.waitKey(1)
         if key == 27:
