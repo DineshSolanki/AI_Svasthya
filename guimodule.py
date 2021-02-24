@@ -1,3 +1,5 @@
+import sys
+
 from PyQt5.QtCore import QMetaObject, QCoreApplication, QRect, Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QLabel, QStatusBar, QMenuBar, QSizePolicy, QCheckBox, QHBoxLayout, QLayout, \
@@ -5,7 +7,6 @@ from PyQt5.QtWidgets import QLabel, QStatusBar, QMenuBar, QSizePolicy, QCheckBox
 
 import Util
 from blink_detection import start_blink_detection
-from telegrambot import notify_bot
 
 
 class Ui_MainWindow(object):
@@ -157,18 +158,18 @@ class Ui_MainWindow(object):
         self.chkScreenRest.setChecked(Util.get_screen_rest_monitoring())
         self.chkEyeBlink.setChecked(Util.get_blink_monitoring())
         self.chkNotificationBanner.setChecked(Util.get_notification_enabled())
-        self.chkConnectSmartphone.setChecked(Util.get_smart_notification())
-
+        self.chkConnectSmartphone.setChecked(Util.get_smart_notification_enabled())
+        self.txtBlinkTime.setText(Util.get_timeout())
         # events
         self.btnStart.clicked.connect(lambda: start_blink_detection())  # Set Start button
         self.chkScreenRest.stateChanged.connect(lambda: Util.set_screen_rest_monitoring(self.chkScreenRest.isChecked()))
         self.chkEyeBlink.stateChanged.connect(lambda: Util.set_blink_monitoring(self.chkEyeBlink.isChecked()))
-        self.chkConnectSmartphone.stateChanged.connect(lambda: Util.set_smart_notification())
+        self.chkConnectSmartphone.stateChanged.connect(
+            lambda: Util.set_smart_notification_enabled(self.chkConnectSmartphone.isChecked()))
         self.chkNotificationBanner.stateChanged.connect(
             lambda: Util.set_notification_enabled(self.chkNotificationBanner.isChecked()))
         self.txtBlinkTime.editingFinished.connect(lambda: Util.set_timeout(self.txtBlinkTime.text()))
-
-        self.btnStop.clicked.connect(QApplication.instance().quit)
+        self.btnStop.clicked.connect(sys.exit)
         QMetaObject.connectSlotsByName(MainWindow)
 
     # setupUi

@@ -1,11 +1,15 @@
-import time
-
 import cv2
 import dlib
 import imutils
 from imutils import face_utils
 from imutils.video import VideoStream
+from plyer import notification
 from scipy.spatial import distance as dist
+
+import Util
+from InfiniteTimer import InfiniteTimer
+from Util import get_timeout
+from telegrambot import notify_bot
 
 
 def eye_aspect_ratio(eye):
@@ -41,9 +45,14 @@ cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
 # ap.add_argument("-v", "--video", type=str, default="",
 #                 help="path to input video file")
 # args = vars(ap.parse_args())
+
 def start_blink_detection():
     global COUNTER
     global TOTAL
+    rest_timer = InfiniteTimer(float(30), send_rest_notification)
+    rest_timer.start()
+    blink_timer = InfiniteTimer(float(get_timeout()) * 60, send_blink_notification, "Blink!! {}".format(TOTAL))
+    blink_timer.start()
     # initialize dlib's face detector (HOG-based) and then create
     # the facial landmark predictor
     print("[INFO] loading facial landmark predictor...")
@@ -80,6 +89,9 @@ def start_blink_detection():
             # determine the facial landmarks for the face region, then
             # convert the facial landmark (x, y)-coordinates to a NumPy
             # array
+            if rest_timer.is_running:
+                rest_timer.cancel()
+            rest_timer.start()
             shape = predictor(gray, rect)
             shape = face_utils.shape_to_np(shape)
             # extract the left and right eye coordinates, then use the
@@ -109,18 +121,16 @@ def start_blink_detection():
                 # then increment the total number of blinks
                 if COUNTER >= EYE_AR_CONSEC_FRAMES:
                     TOTAL += 1
-                # notification.notify(
-                #     title='Blink Detected',
-                #     message=f'Blink Count ={TOTAL}',
-                #     app_icon=None,  # e.g. 'C:\\icon_32x32.ico'
-                #     timeout=5,  # seconds
-                # )
+                    if blink_timer.is_running:
+                        blink_timer.cancel()
+                    blink_timer.start()
+
                 # reset the eye frame counter
                 COUNTER = 0
 
                 # draw the total number of blinks on the frame along with
                 # the computed eye aspect ratio for the frame
-                cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
+                cv2.putText(frame, f"EAR: {ear:.2f}", (300, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
         # show the frame
@@ -134,5 +144,35 @@ def start_blink_detection():
         # if cv2.waitKey(1) & 0xFF == ord('q'):
         #     break
     # do a bit of cleanup
+    if rest_timer.is_running:
+        rest_timer.cancel()
+    if blink_timer.is_running:
+        blink_timer.cancel()
     cv2.destroyAllWindows()
     vs.stop()
+
+
+def send_window_notification(title, message, app_icon=None, timeout=5):
+    notification.notify(
+        title=title,
+        message=message,
+        app_icon=app_icon,  # e.g. 'C:\\icon_32x32.ico'
+        timeout=timeout,  # seconds
+    )
+
+
+def send_rest_notification():
+    if Util.get_screen_rest_monitoring():
+        if Util.get_notification_enabled():
+            send_window_notification('Screen Rest', "It's been 20 minutes since you took screen rest.",
+                                     "Assets/coffee.ico",timeout=10)
+        if Util.get_smart_notification_enabled():
+            notify_bot(f"Screen Rest time!!")
+
+
+def send_blink_notification():
+    if Util.get_blink_monitoring():
+        if Util.get_notification_enabled():
+            send_window_notification('Blink', f'Blink Count ={TOTAL}', "Assets/eye.ico")
+        if Util.get_smart_notification_enabled():
+            notify_bot(f"Blink!!\n Blink Count = {TOTAL}")

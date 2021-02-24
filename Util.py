@@ -19,8 +19,8 @@ def set_notification_enabled(is_enabled=True):
     settings.setsave("notification-enabled", is_enabled)
 
 
-def set_smart_notification():
-    pass
+def set_smart_notification_enabled(is_enabled=True):
+    settings.setsave("smart_notification-enabled", is_enabled)
 
 
 def get_timeout():
@@ -39,5 +39,5 @@ def get_notification_enabled():
     return settings.get("notification-enabled")
 
 
-def get_smart_notification():
-    return False
+def get_smart_notification_enabled():
+    return settings.get("smart_notification-enabled")
