@@ -155,10 +155,10 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         # settingsRestoration
-        self.chkScreenRest.setChecked(Util.get_screen_rest_monitoring())
-        self.chkEyeBlink.setChecked(Util.get_blink_monitoring())
-        self.chkNotificationBanner.setChecked(Util.get_notification_enabled())
-        self.chkConnectSmartphone.setChecked(Util.get_smart_notification_enabled())
+        self.chkScreenRest.setChecked(bool(Util.get_screen_rest_monitoring()))
+        self.chkEyeBlink.setChecked(bool(Util.get_blink_monitoring()))
+        self.chkNotificationBanner.setChecked(bool(Util.get_notification_enabled()))
+        self.chkConnectSmartphone.setChecked(bool(Util.get_smart_notification_enabled()))
         self.txtBlinkTime.setText(Util.get_timeout())
         # events
         self.btnStart.clicked.connect(lambda: start_blink_detection())  # Set Start button
