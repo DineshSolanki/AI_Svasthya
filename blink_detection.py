@@ -1,6 +1,9 @@
+import sys
+
 import cv2
 import dlib
 import imutils
+from PyQt5.QtWidgets import QApplication, QMessageBox
 from imutils import face_utils
 from imutils.video import VideoStream
 from plyer import notification
@@ -47,6 +50,9 @@ cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
 # args = vars(ap.parse_args())
 
 def start_blink_detection():
+    if not Util.check_camera_availability():
+        return
+
     global COUNTER
     global TOTAL
     rest_timer = InfiniteTimer(float(30), send_rest_notification)

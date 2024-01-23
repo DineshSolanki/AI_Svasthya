@@ -1,3 +1,5 @@
+import cv2
+from PyQt5.QtWidgets import QApplication, QMessageBox
 from easysettings import EasySettings
 
 settings = EasySettings("config.conf")
@@ -17,6 +19,10 @@ def set_screen_rest_monitoring(is_enabled=True):
 
 def set_notification_enabled(is_enabled=True):
     settings.setsave("notification-enabled", is_enabled)
+
+
+def showErrorDialog(title, message):
+    QMessageBox.critical(None, title, message)
 
 
 def set_smart_notification_enabled(is_enabled=True):
@@ -41,3 +47,14 @@ def get_notification_enabled():
 
 def get_smart_notification_enabled():
     return settings.get("smart_notification-enabled")
+
+
+def check_camera_availability():
+    # Check if camera is available
+    cap = cv2.VideoCapture(0)  # 0 is traditionally the default camera
+    if not cap.isOpened():
+        showErrorDialog('Error', 'Camera is not available')
+        cap.release()
+        return False
+    cap.release()
+    return True
