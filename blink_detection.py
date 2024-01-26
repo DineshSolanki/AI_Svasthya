@@ -1,9 +1,8 @@
-import sys
+import os
 
 import cv2
 import dlib
 import imutils
-from PyQt5.QtWidgets import QApplication, QMessageBox
 from imutils import face_utils
 from imutils.video import VideoStream
 from plyer import notification
@@ -50,6 +49,14 @@ cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
 # args = vars(ap.parse_args())
 
 def start_blink_detection():
+    filename = r"data/shape_predictor_68_face_landmarks.dat"
+    url = "http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2"
+
+    if not os.path.exists(filename):
+        print(f"{filename} not found, downloading...")
+        Util.download_file(url, filename + ".bz2")
+        Util.decompress_file(filename)
+
     if not Util.check_camera_availability():
         return
 
@@ -63,7 +70,8 @@ def start_blink_detection():
     # the facial landmark predictor
     print("[INFO] loading facial landmark predictor...")
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor(r"data/shape_predictor_68_face_landmarks.dat")
+
+    predictor = dlib.shape_predictor(filename)
     # grab the indexes of the facial landmarks for the left and
     # right eye, respectively
     (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]

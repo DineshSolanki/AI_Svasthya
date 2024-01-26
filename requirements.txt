@@ -8,3 +8,5 @@ plyer~=2.1.0
 google>=3.0.0
 EasySettings>=4.0.0
 python-telegram-bot>=20.7
+requests>=2.31.0
+telegram>=0.0.1
