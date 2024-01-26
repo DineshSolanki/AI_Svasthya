@@ -27,15 +27,15 @@ class InfiniteTimer:
         if not self._should_continue and not self.is_running:
             self._should_continue = True
             self._start_timer()
-        else:
-            print("Timer already started or running, please wait if you're restarting.")
+        # else:
+        #     print("Timer already started or running, please wait if you're restarting.")
 
     def cancel(self):
         if self.thread is not None:
             self._should_continue = False  # Just in case thread is running and cancel fails.
             self.thread.cancel()
-        else:
-            print("Timer never started or failed to initialize.")
+        # else:
+        #     print("Timer never started or failed to initialize.")
 
 
 def tick():

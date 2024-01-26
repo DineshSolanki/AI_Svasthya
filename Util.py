@@ -34,7 +34,8 @@ def set_smart_notification_enabled(is_enabled=True):
 
 
 def get_timeout():
-    return settings.get("timeout")
+    val = settings.get("timeout")
+    return val if val else '0.0'
 
 
 def get_blink_monitoring():
